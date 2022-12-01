@@ -22,10 +22,10 @@ jobs:
       fail-fast: true
     runs-on: ${{ matrix.os }}
     steps:
+      - uses: actions/checkout@v3
       - name: Setup Haxe
-        uses: |
-          actions/checkout@v3
-          krdlab/setup-haxe@v1
+      - uses: krdlab/setup-haxe@v1
+      - name: Install haxe deps 
         with:
           haxe-version: ${{ matrix.haxe }}
         run: |
