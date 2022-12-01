@@ -23,11 +23,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Setup Haxe
-      - uses: actions/checkout@v3
-      - uses: krdlab/setup-haxe@v1
+        uses: actions/checkout@v3
+        uses: krdlab/setup-haxe@v1
         with:
           haxe-version: ${{ matrix.haxe }}
-      - run: |
+        run: |
           haxe -version
           haxelib install test.hxml --always
       - name: Run Tests 
