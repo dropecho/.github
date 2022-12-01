@@ -10,11 +10,14 @@ on:
       NPM_TOKEN:
         required: true
 
+# TODO add rest of os to matrix
+# os: [ubuntu-latest, macos-latest]
+
 jobs:
   unit_tests:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
         haxe: [4.2.1]
       fail-fast: true
     runs-on: ${{ matrix.os }}
