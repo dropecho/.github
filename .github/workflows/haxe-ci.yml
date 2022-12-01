@@ -3,9 +3,12 @@ name: HAXE_CI
 on:
   workflow_call:
     secrets:
-      GH_TOKEN: required
-      HAXELIB_PASS: required
-      NPM_TOKEN: required
+      GH_TOKEN:
+        required: true
+      HAXELIB_PASS:
+        required: true
+      NPM_TOKEN:
+        required: true
 
 jobs:
   unit_tests:
