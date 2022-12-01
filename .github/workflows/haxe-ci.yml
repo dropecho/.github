@@ -1,9 +1,12 @@
 name: HAXE_CI
 
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
+    secrets:
+      GH_TOKEN: required
+      HAXELIB_PASS: required
+      NPM_TOKEN: required
+
 jobs:
   unit_tests:
     strategy:
