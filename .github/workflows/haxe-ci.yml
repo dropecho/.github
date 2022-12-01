@@ -22,6 +22,7 @@ jobs:
       fail-fast: true
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Setup Haxe
       - uses: actions/checkout@v3
       - uses: krdlab/setup-haxe@v1
         with:
@@ -29,7 +30,7 @@ jobs:
       - run: |
           haxe -version
           haxelib install test.hxml --always
-      - name: Compile test code
+      - name: Run Tests 
         run: haxelib run munit t
   semantic_release:
     needs: unit_tests
