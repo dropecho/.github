@@ -26,12 +26,11 @@ jobs:
       - uses: krdlab/setup-haxe@v1
         with:
           haxe-version: ${{ matrix.haxe }}
-      - name: Install Haxe dependencies.
+      - name: Run Tests. 
         run: |
           haxe -version
           haxelib install test.hxml --always
-      - name: Run Tests 
-        run: haxelib run munit t
+          haxelib run munit t
   semantic_release:
     needs: unit_tests
     name: semantic_release
