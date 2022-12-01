@@ -50,7 +50,7 @@ jobs:
       uses: krdlab/setup-haxe@v1
     - name: Run semantic release
       env: # Or as an environment variable
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         HAXELIB_PASS: ${{secrets.HAXELIB_PASS}} 
         NPM_TOKEN: ${{secrets.NPM_TOKEN}} 
       run: |
