@@ -30,6 +30,7 @@ jobs:
         run: |
           haxe -version
           haxelib install test.hxml --always
+          ls -lah
           haxelib run munit t
   semantic_release:
     needs: unit_tests
