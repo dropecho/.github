@@ -22,18 +22,25 @@ jobs:
       fail-fast: true
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: krdlab/setup-haxe@v1
-        with:
-          haxe-version: ${{ matrix.haxe }}
-      - name: Install Haxe Deps for tests. 
-        run: |
-          haxe -version
-          haxelib install test.hxml --always
-      - name: Run Tests
-        run: |
-          mkdir artifacts
-          haxelib run munit t
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16
+        cache: 'npm'
+    - name: Setup haxe
+    - uses: krdlab/setup-haxe@v1
+      with:
+        haxe-version: ${{ matrix.haxe }}
+    - name: Install Haxe Deps for tests. 
+      run: |
+        haxe -version
+        haxelib install test.hxml --always
+    - name: Run Tests
+      run: |
+        mkdir artifacts
+        npm run test
   semantic_release:
     needs: unit_tests
     name: semantic_release
