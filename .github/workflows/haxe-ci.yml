@@ -3,8 +3,8 @@ name: HAXE_CI
 on:
   workflow_call:
     secrets:
-      GH_TOKEN:
-        required: true
+#       GITHUB_TOKEN:
+#         required: true
       HAXELIB_PASS:
         required: true
       NPM_TOKEN:
@@ -45,6 +45,10 @@ jobs:
     needs: unit_tests
     name: semantic_release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -57,7 +61,7 @@ jobs:
         uses: krdlab/setup-haxe@v1
       - name: Run semantic release
         env: # Or as an environment variable
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HAXELIB_PASS: ${{secrets.HAXELIB_PASS}}
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
