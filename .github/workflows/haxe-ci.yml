@@ -24,10 +24,10 @@ jobs:
         with:
           node-version: 16
           cache: "npm"
-      - name: Setup haxe
-        uses: krdlab/setup-haxe@v1
-        with:
-          haxe-version: ${{ matrix.haxe }}
+      # - name: Setup haxe
+      #   uses: krdlab/setup-haxe@v1
+      #   with:
+      #     haxe-version: ${{ matrix.haxe }}
       - name: Run Tests
         run: |
           npm ci
@@ -49,8 +49,8 @@ jobs:
         with:
           node-version: 16
           cache: "npm"
-      - name: Setup haxe
-        uses: krdlab/setup-haxe@v1
+      # - name: Setup haxe
+      #   uses: krdlab/setup-haxe@v1
       - name: Run semantic release
         env: # Or as an environment variable
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
