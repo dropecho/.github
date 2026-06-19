@@ -1,10 +1,14 @@
-name: HAXE_CI
+name: HAXE_CI_LEGACY
+
+# Legacy CI that installs Haxe with krdlab/setup-haxe and pulls libraries
+# straight from haxelib via the .hxml files (test.hxml / build.hxml).
+# Does NOT use lix.
 
 on:
   workflow_call:
     inputs:
       haxe-versions:
-        description: "JSON array of Haxe versions to test against (lix installs these)"
+        description: "JSON array of Haxe versions to test against"
         required: false
         type: string
         default: '["4.3.0"]'
@@ -33,18 +37,15 @@ jobs:
         with:
           node-version: 16
           cache: "npm"
-      - name: Install dependencies
-        run: npm ci
-      # lix downloads Haxe itself, so no separate Haxe setup action is needed.
-      - name: Install lix
-        run: npm install --no-save lix
-      - name: Set up Haxe via lix
-        run: |
-          npx lix install haxe ${{ matrix.haxe }}
-          npx lix use haxe ${{ matrix.haxe }}
-          npx lix download
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: ${{ matrix.haxe }}
+      - name: Install Haxe libraries
+        run: haxelib install test.hxml --always
       - name: Run Tests
         run: |
+          npm ci
           mkdir -p artifacts
           npm run test
   semantic_release:
@@ -63,16 +64,17 @@ jobs:
         with:
           node-version: 16
           cache: "npm"
-      - name: Install dependencies
-        run: npm ci
-      - name: Install lix
-        run: npm install --no-save lix
-      - name: Set up Haxe via lix
-        run: npx lix download
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@v1
+        with:
+          haxe-version: 4.3.0
+      - name: Install Haxe libraries
+        run: haxelib install build.hxml --always
       - name: Run semantic release
         env: # Or as an environment variable
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HAXELIB_PASS: ${{ secrets.HAXELIB_PASS }}
         run: |
+          npm ci
           npm run build
           npx semantic-release
