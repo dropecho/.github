@@ -28,13 +28,9 @@ jobs:
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: ${{ matrix.haxe }}
-      - name: Install Haxe Deps for tests.
-        run: |
-          npm install -g lix
-          haxe -version
-          haxelib install test.hxml --always
       - name: Run Tests
         run: |
+          npm ci
           mkdir artifacts
           npm run test
   semantic_release:
@@ -60,8 +56,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HAXELIB_PASS: ${{secrets.HAXELIB_PASS}}
         run: |
-          npm install -g lix
           npm ci
-          haxelib install build.hxml --always
           npm run build
           npx semantic-release
