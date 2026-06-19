@@ -3,13 +3,8 @@ name: HAXE_CI
 on:
   workflow_call:
     secrets:
-#       GITHUB_TOKEN:
-#         required: true
       HAXELIB_PASS:
         required: true
-      NPM_TOKEN:
-        required: true
-
 # TODO add rest of os to matrix
 # os: [ubuntu-latest, macos-latest]
 
@@ -63,7 +58,6 @@ jobs:
         env: # Or as an environment variable
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           HAXELIB_PASS: ${{secrets.HAXELIB_PASS}}
-          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
         run: |
           npm ci
           haxelib install build.hxml --always
