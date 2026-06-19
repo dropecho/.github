@@ -30,6 +30,7 @@ jobs:
           haxe-version: ${{ matrix.haxe }}
       - name: Install Haxe Deps for tests.
         run: |
+          npm install -g lix
           haxe -version
           haxelib install test.hxml --always
       - name: Run Tests
