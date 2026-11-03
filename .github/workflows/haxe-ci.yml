@@ -33,7 +33,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: "npm"
@@ -53,6 +53,8 @@ jobs:
           npm run test
   semantic_release:
     needs: unit_tests
+    # Only release from main; pull request runs just test.
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     name: semantic_release
     runs-on: ubuntu-latest
     permissions:
@@ -69,7 +71,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: "npm"
