@@ -10,7 +10,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
-      - uses: krdlab/setup-haxe@v1
+      - uses: krdlab/setup-haxe@v2
         with:
           haxe-version: ${{ matrix.haxe }}
       - run: haxe -version
@@ -27,7 +27,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
       - name: Setup haxe
-        uses: krdlab/setup-haxe@v1
+        uses: krdlab/setup-haxe@v2
       - name: Run semantic release
         env: # Or as an environment variable
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
