@@ -1,0 +1,51 @@
+name: Coverage comment
+description: >-
+  Posts an lcov report's coverage as a pull request comment, with the coverage of each changed
+  file, and adds it to the job summary. Updates its own comment on later pushes.
+
+inputs:
+  lcov:
+    description: Path to the lcov report, relative to the workspace.
+    required: true
+  github-token:
+    description: Token that can write pull request comments.
+    required: false
+    default: ${{ github.token }}
+
+runs:
+  using: composite
+  steps:
+    - name: Render and post coverage
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        LCOV: ${{ inputs.lcov }}
+        SCRIPT: ${{ github.action_path }}/coverage-comment.mjs
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        REPO: ${{ github.repository }}
+        # Line links point at the PR's head commit, not the merge commit the run checks out.
+        HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      run: |
+        out="$RUNNER_TEMP/coverage-comment"
+        mkdir -p "$out"
+        if [ -n "$PR_NUMBER" ]; then
+          gh pr diff "$PR_NUMBER" -R "$REPO" --name-only > "$out/changed-files.txt" || rm -f "$out/changed-files.txt"
+        fi
+        node "$SCRIPT" "$LCOV" "$out/changed-files.txt" > "$out/comment.md"
+        cat "$out/comment.md" >> "$GITHUB_STEP_SUMMARY"
+
+        # Outside a pull request there is nowhere to comment; the job summary is the report.
+        if [ -z "$PR_NUMBER" ]; then
+          exit 0
+        fi
+        marker="$(head -n 1 "$out/comment.md")"
+        id="$(gh api --paginate "repos/$REPO/issues/$PR_NUMBER/comments" \
+          --jq ".[] | select(.body | startswith(\"$marker\")) | .id" | head -n 1)"
+        # A fork's pull request gets a read-only token, so a failed post only warns.
+        if [ -n "$id" ]; then
+          gh api -X PATCH "repos/$REPO/issues/comments/$id" -F body=@"$out/comment.md" > /dev/null \
+            || echo "::warning::Could not update the coverage comment."
+        else
+          gh api "repos/$REPO/issues/$PR_NUMBER/comments" -F body=@"$out/comment.md" > /dev/null \
+            || echo "::warning::Could not post the coverage comment."
+        fi
