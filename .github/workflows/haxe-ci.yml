@@ -23,8 +23,13 @@ jobs:
       matrix:
         os: ${{ fromJSON(inputs.os) }}
         haxe: ${{ fromJSON(inputs.haxe-versions) }}
-      fail-fast: true
+      # Let every OS/version finish, so one failure doesn't hide the others.
+      fail-fast: false
     runs-on: ${{ matrix.os }}
+    # Windows runners default to PowerShell; bash is on every runner and matches the steps below.
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
